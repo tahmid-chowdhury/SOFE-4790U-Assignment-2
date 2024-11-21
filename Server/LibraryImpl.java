@@ -1,18 +1,33 @@
+/* SOFE 4790U: Distributed Systems
+ * Individual Programming Assignment 2
+ * Tahmid Chowdhury
+ * Faculty of Engineering and Applied Science
+ * Ontario Tech University
+ * Oshawa, Ontario
+ * tahmid.chowdhury1@ontariotechu.net
+ * SID: 100822671
+ * 2024-11-24
+ */
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.io.*;
 import java.util.*;
 
+// Implementation of the music library
 public class LibraryImpl extends UnicastRemoteObject implements Library {
+    // Store songs, ratings, and metadata in memory
     private Map<String, File> songs = new HashMap<>();
     private Map<String, List<Integer>> ratings = new HashMap<>();
     private Map<String, String> metadata = new HashMap<>();
 
+    // Constructor to load songs and metadata
     public LibraryImpl() throws RemoteException {
         super();
         loadSongs();
     }
 
+    // Load songs and metadata from the server directory
     private void loadSongs() {
         // Pre-load songs and metadata from the server directory
         File songDir = new File("Songs");
@@ -20,10 +35,13 @@ public class LibraryImpl extends UnicastRemoteObject implements Library {
 
         for (File song : songDir.listFiles()) {
             songs.put(song.getName(), song);
+
+            // Assume metadata is stored in the format "Artist: <artist>, Album: <album>, Duration: <duration>"
             metadata.put(song.getName(), "Artist: Daft Punk, Album: Around the World, Duration: 7:10");
         }
     }
 
+    // Implement the remote methods
     @Override
     public List<String> searchSongs(String query) throws RemoteException {
         List<String> results = new ArrayList<>();
